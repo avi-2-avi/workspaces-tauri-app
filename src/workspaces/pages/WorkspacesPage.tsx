@@ -1,5 +1,19 @@
 import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const WorkspacesPage = () => {
-  return <Button variant="contained">Hello world from MUI!</Button>;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/auth");
+  };
+
+  return (
+    <>
+      <p>This is the Workspaces page</p>
+      <Button variant="contained" onClick={handleLogout}>
+        Log out
+      </Button>
+    </>
+  );
 };
