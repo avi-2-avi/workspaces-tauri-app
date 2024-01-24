@@ -3,6 +3,9 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
+// Button test
+import Button from "@mui/material/Button";
+
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
@@ -15,6 +18,9 @@ function App() {
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
+
+      <h2>My MUI Button</h2>
+      <Button variant="contained">Hello MUI!</Button>
 
       <div className="row">
         <a href="https://vitejs.dev" target="_blank">
