@@ -10,7 +10,7 @@ export const WorkspacesPage = () => {
 
   return (
     <>
-      <p>This is the Workspaces page</p>
+      <p>This is the Workspaces page LOG OUT</p>
       <Button variant="contained" onClick={handleLogout}>
         Log out
       </Button>
