@@ -1,10 +1,13 @@
+small {
+  font-size: x-small;
+}
 .MuiContainer-root {
   text-align: center;
   padding-top: 6rem;
 
   img {
     width: 100%;
-    height: 100%;
+    height: 22rem;
     object-fit: cover;
   }
 
@@ -30,6 +33,9 @@
         margin-bottom: 7px;
         color: #444;
       }
+      small {
+        color: #ff0000;
+      }
     }
     .MuiButton-root {
       margin-top: 1rem;
@@ -44,8 +50,5 @@
   }
   .MuiDivider-root {
     padding-top: 1.4rem;
-  }
-  small {
-    font-size: x-small;
   }
 }
