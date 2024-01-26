@@ -1,7 +1,9 @@
+import { useFormik } from "formik";
 import { Button, Container, Divider, Grid } from "@mui/material";
 import "./LoginPage.css";
 import * as yup from "yup";
-import { useFormik } from "formik";
+import { checkingAuthentication } from "../../store/auth";
+import { useAppDispatch } from "../../hooks";
 
 const validationSchema = yup.object({
   email: yup
@@ -15,6 +17,7 @@ const validationSchema = yup.object({
 });
 
 export const LoginPage = () => {
+  const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -23,6 +26,7 @@ export const LoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
+      dispatch(checkingAuthentication(values.email, values.password));
     },
   });
 
