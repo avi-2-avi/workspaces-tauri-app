@@ -1,9 +1,12 @@
+import { useMemo } from "react";
 import { useFormik } from "formik";
 import { Button, Container, Divider, Grid } from "@mui/material";
 import "./LoginPage.css";
 import * as yup from "yup";
-import { checkingAuthentication } from "../../store/auth";
+import { startLoginWithEmailPassword } from "../../store/auth";
 import { useAppDispatch } from "../../hooks";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 const validationSchema = yup.object({
   email: yup
@@ -17,6 +20,9 @@ const validationSchema = yup.object({
 });
 
 export const LoginPage = () => {
+  const { status } = useSelector((state: RootState) => state.auth);
+  const isAuthenticating = useMemo(() => status === "checking", [status]);
+
   const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
@@ -25,8 +31,8 @@ export const LoginPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      dispatch(checkingAuthentication(values.email, values.password));
+      const { email, password } = values;
+      dispatch(startLoginWithEmailPassword({ email, password }));
     },
   });
 
@@ -70,6 +76,7 @@ export const LoginPage = () => {
                 disableRipple={true}
                 variant="contained"
                 fullWidth={true}
+                disabled={isAuthenticating}
               >
                 Sign In
               </Button>

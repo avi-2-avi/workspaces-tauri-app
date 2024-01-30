@@ -1,17 +1,18 @@
 import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { startLogout } from "../../store/auth";
+import { useAppDispatch } from "../../hooks";
 
 export const WorkspacesPage = () => {
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const handleLogout = () => {
-    navigate("/auth");
+  const onLogout = () => {
+    dispatch(startLogout());
   };
 
   return (
     <>
       <p>This is the Workspaces page LOG OUT</p>
-      <Button variant="contained" onClick={handleLogout}>
+      <Button onClick={onLogout} variant="contained">
         Log out
       </Button>
     </>
