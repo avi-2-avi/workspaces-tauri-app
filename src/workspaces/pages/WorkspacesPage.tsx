@@ -1,6 +1,6 @@
-import { Button } from "@mui/material";
 import { startLogout } from "../../store/auth";
 import { useAppDispatch } from "../../hooks";
+import { Button } from "@mui/material";
 
 export const WorkspacesPage = () => {
   const dispatch = useAppDispatch();
