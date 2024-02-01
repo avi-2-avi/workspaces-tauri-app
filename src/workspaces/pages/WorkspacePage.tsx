@@ -1,44 +1,11 @@
-import { Grid, styled } from "@mui/material";
+import { Grid } from "@mui/material";
 import { CustomButton } from "../components/CustomButton";
 import { MainCard } from "../components/MainCard";
 import { useParams } from "react-router-dom";
+import { UserInfoItem } from "../components/UserInfoItem";
 
 export const WorkspacePage = () => {
   const { workspaceId } = useParams();
-
-  const UserInfoItem = ({
-    title,
-    value,
-    xs,
-    sm,
-    md,
-  }: {
-    title: string;
-    value: string;
-    xs: number;
-    sm: number;
-    md: number;
-  }) => (
-    <Grid
-      item
-      xs={xs}
-      sm={sm}
-      md={md}
-      style={{
-        borderRight: "1px solid #EAEEED",
-        paddingBottom: "0.5rem",
-      }}
-    >
-      <Subtitle>{title}</Subtitle>
-      <div style={{ fontSize: 14 }}>{value}</div>
-    </Grid>
-  );
-
-  const Subtitle = styled("div")(({}) => ({
-    fontSize: "14px",
-    lineHeight: "22px",
-    color: "#535B64",
-  }));
 
   const summaryData = [
     { title: "Username", value: "ITAdmin" },
