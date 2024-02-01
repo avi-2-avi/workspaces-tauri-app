@@ -9,14 +9,12 @@ export const WorkspacePage = () => {
   const UserInfoItem = ({
     title,
     value,
-    isLastItem,
     xs,
     sm,
     md,
   }: {
     title: string;
     value: string;
-    isLastItem: boolean;
     xs: number;
     sm: number;
     md: number;
@@ -27,8 +25,7 @@ export const WorkspacePage = () => {
       sm={sm}
       md={md}
       style={{
-        borderRight: isLastItem ? "none" : "1px solid #EAEEED",
-
+        borderRight: "1px solid #EAEEED",
         paddingBottom: "0.5rem",
       }}
     >
@@ -113,7 +110,6 @@ export const WorkspacePage = () => {
               xs={12}
               sm={6}
               md={4}
-              isLastItem={index % 3 === 2}
             />
           ))}
         </Grid>
@@ -131,7 +127,6 @@ export const WorkspacePage = () => {
               xs={12}
               sm={6}
               md={3}
-              isLastItem={index % 3 === 2}
             />
           ))}
         </Grid>
@@ -153,7 +148,6 @@ export const WorkspacePage = () => {
               xs={12}
               sm={6}
               md={4}
-              isLastItem={index % 3 === 2}
             />
           ))}
         </Grid>
@@ -171,7 +165,6 @@ export const WorkspacePage = () => {
               xs={12}
               sm={6}
               md={6}
-              isLastItem={index % 3 === 2}
             />
           ))}
         </Grid>
