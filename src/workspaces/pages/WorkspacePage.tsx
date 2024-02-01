@@ -34,7 +34,7 @@ export const WorkspacePage = () => {
     </Grid>
   );
 
-  const Subtitle = styled("div")(({ theme }) => ({
+  const Subtitle = styled("div")(({}) => ({
     fontSize: "14px",
     lineHeight: "22px",
     color: "#535B64",
