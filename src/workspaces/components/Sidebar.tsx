@@ -19,7 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { pagesConfig } from "../pages/config";
 
 export const Sidebar = ({ children }: { children: any }) => {
-  const drawerWidthClosed = "2.8rem";
+  const drawerWidthClosed = 40;
   const drawerWidth = 260;
   const [open, setOpen] = useState(false);
   const [marginLeft, setMarginLeft] = useState(drawerWidthClosed);
@@ -56,7 +56,15 @@ export const Sidebar = ({ children }: { children: any }) => {
   }));
 
   const MainContainer = styled("div")(() => ({
-    marginLeft: marginLeft,
+    marginLeft: marginLeft - 8,
+    marginTop: -8,
+    marginRight: -8,
+    height: "100vh",
+    backgroundColor: "#f2f3f3",
+    paddingTop: "1.6rem",
+    paddingBottom: "1.6rem",
+    paddingRight: "1.6rem",
+    paddingLeft: "1.6rem",
   }));
 
   const onDrawerOpen = () => {
@@ -81,7 +89,7 @@ export const Sidebar = ({ children }: { children: any }) => {
   };
 
   useEffect(() => {
-    setMarginLeft(open ? `${drawerWidth}px` : drawerWidthClosed);
+    setMarginLeft(open ? drawerWidth : drawerWidthClosed);
   }, [open]);
 
   return (

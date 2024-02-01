@@ -6,7 +6,8 @@
 
   color: #0f0f0f;
 
-  background-color: #ffffff;
+  --main-background-color: #ffffff;
+  --secondary-background-color: #f2f3f3;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
