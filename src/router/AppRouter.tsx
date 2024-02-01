@@ -5,6 +5,7 @@ import { CheckingAuth } from "../ui/components";
 import { Sidebar } from "../workspaces/components/Sidebar";
 import { WorkspacesPage } from "../workspaces";
 import { AccountPage } from "../workspaces/pages/AccountPage";
+import { WorkspacePage } from "../workspaces/pages/WorkspacePage";
 
 export const AppRouter = () => {
   const status = useCheckAuth();
@@ -25,7 +26,8 @@ export const AppRouter = () => {
           <Routes>
             <Route path="/" element={<WorkspacesPage />} />
             <Route path="/account" element={<AccountPage />} />
-            <Route path="/*" element={<Navigate to="/" />} />
+            <Route path="/workspaces/:id" element={<WorkspacePage />} />
+            /* <Route path="/*" element={<Navigate to="/" />} /> */
           </Routes>
         </Sidebar>
       )}

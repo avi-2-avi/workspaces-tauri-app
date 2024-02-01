@@ -1,8 +1,11 @@
-import { styled } from "@mui/material";
+import { Input, styled } from "@mui/material";
 import { CustomButton } from "./CustomButton";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { getWorkspaces } from "../../services/workspaceService";
+import { Link } from "react-router-dom";
 
 const columns: GridColDef[] = [
   {
@@ -11,7 +14,14 @@ const columns: GridColDef[] = [
     width: 130,
     valueGetter: (params) => (params.value ? "Yes" : "No"),
   },
-  { field: "workspace_id", headerName: "Workspace ID", width: 130 },
+  {
+    field: "workspace_id",
+    headerName: "Workspace ID",
+    width: 130,
+    renderCell: (params) => (
+      <Link to={`/workspaces/${params.value}`}>{params.value}</Link>
+    ),
+  },
   { field: "username", headerName: "Username", width: 100 },
   { field: "compute", headerName: "Compute", width: 100 },
   { field: "root_volume", headerName: "Root volume", width: 100 },
@@ -37,6 +47,8 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // This works, just don't wanna call too many times API GATEWAY
+        /*
         const response = await getWorkspaces();
         const workspacesWithIds = response.data.workspaces.map(
           (workspace: any, index: number) => ({
@@ -44,8 +56,8 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
             id: index + 1, // You can use any unique identifier here
           }),
         );
-        console.log(workspacesWithIds);
         setWorkspaces(workspacesWithIds);
+        */
       } catch (error) {
         console.error("Error fetching workspaces:", error);
       }
@@ -59,22 +71,48 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
     display: "flex",
     flexFlow: "column",
     paddingInline: "1rem",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
   }));
 
   return (
     <TableContainer>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h3>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "1rem",
+        }}
+      >
+        <h3 style={{ margin: 0 }}>
           Workspaces <b style={{ color: "grey" }}>({workspaces.length})</b>
         </h3>
         <div>
-          <CustomButton />
-          <CustomButton />
-          <CustomButton />
+          <CustomButton>
+            <RefreshIcon fontSize="small" />
+          </CustomButton>
+          <CustomButton>View Details</CustomButton>
+          <CustomButton>Start</CustomButton>
+          <CustomButton>Stop</CustomButton>
+          <CustomButton>Delete</CustomButton>
+          <CustomButton>Actions</CustomButton>
+          <CustomButton isSecondary>Create Workspaces</CustomButton>
         </div>
       </div>
-      <p>Filter WorkSpaces by WorkSpace ID, Username, Bundle, or Directory</p>
-      <input />
+      <small style={{ fontSize: "small", marginLeft: "0.5rem" }}>
+        Filter WorkSpaces by WorkSpace ID, Username, Bundle, or Directory
+      </small>
+      <Input
+        placeholder="Filter WorkSpaces by WorkSpace ID, Username, Bundle, or Directory"
+        startAdornment={<SearchIcon />}
+        sx={{ width: 500, border: "1px solid #ced4da" }}
+        style={{
+          fontSize: 12,
+          fontStyle: "italic",
+          marginLeft: "0.5rem",
+          marginBottom: "1rem",
+        }}
+      />
       <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={workspaces}
