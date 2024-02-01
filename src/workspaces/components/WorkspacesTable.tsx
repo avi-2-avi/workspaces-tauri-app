@@ -48,7 +48,6 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
     const fetchData = async () => {
       try {
         // This works, just don't wanna call too many times API GATEWAY
-        /*
         const response = await getWorkspaces();
         const workspacesWithIds = response.data.workspaces.map(
           (workspace: any, index: number) => ({
@@ -57,7 +56,6 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
           }),
         );
         setWorkspaces(workspacesWithIds);
-        */
       } catch (error) {
         console.error("Error fetching workspaces:", error);
       }
