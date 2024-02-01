@@ -1,37 +1,59 @@
 import { styled } from "@mui/material";
 import { CustomButton } from "./CustomButton";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import { getWorkspaces } from "../../services/workspaceService";
 
 const columns: GridColDef[] = [
-  { field: "volumeEncryption", headerName: "Volume encryption", width: 130 },
-  { field: "workspaceId", headerName: "Workspace ID", width: 100 },
+  {
+    field: "user_volume_encryption",
+    headerName: "Volume encryption",
+    width: 130,
+    valueGetter: (params) => (params.value ? "Yes" : "No"),
+  },
+  { field: "workspace_id", headerName: "Workspace ID", width: 130 },
   { field: "username", headerName: "Username", width: 100 },
   { field: "compute", headerName: "Compute", width: 100 },
-  { field: "rootVolume", headerName: "Root volume", width: 100 },
-  { field: "userVolume", headerName: "User volume", width: 100 },
-  { field: "operatingSystem", headerName: "Operating System", width: 130 },
-  { field: "bundle", headerName: "Bundle", width: 200 },
-  { field: "worspaceIp", headerName: "Workspace IP", width: 100 },
-  { field: "standbyEnabled", headerName: "Standby enabled", width: 130 },
-  { field: "runningMode", headerName: "Running Mode", width: 130 },
+  { field: "root_volume", headerName: "Root volume", width: 100 },
+  { field: "user_volume", headerName: "User volume", width: 100 },
+  { field: "operating_system", headerName: "Operating System", width: 200 },
+  { field: "bundle_name", headerName: "Bundle", width: 340 },
+  { field: "ip_address", headerName: "Workspace IP", width: 130 },
+  {
+    field: "standby_enabled",
+    headerName: "Standby enabled",
+    width: 130,
+    valueGetter: (params) => (params.value ? "Yes" : "No"),
+  },
+  { field: "running_mode", headerName: "Running Mode", width: 130 },
   { field: "protocol", headerName: "Protocol", width: 100 },
   { field: "status", headerName: "Status", width: 100 },
-  { field: "organizationName", headerName: "Organization Name", width: 150 },
-];
-
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  { field: "organization_name", headerName: "Organization Name", width: 150 },
 ];
 
 export const WorkspacesTable = ({ children }: { children: any }) => {
+  const [workspaces, setWorkspaces] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getWorkspaces();
+        const workspacesWithIds = response.data.workspaces.map(
+          (workspace: any, index: number) => ({
+            ...workspace,
+            id: index + 1, // You can use any unique identifier here
+          }),
+        );
+        console.log(workspacesWithIds);
+        setWorkspaces(workspacesWithIds);
+      } catch (error) {
+        console.error("Error fetching workspaces:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const TableContainer = styled("div")(({ theme }) => ({
     backgroundColor: "#FAFAFA",
     display: "flex",
@@ -43,7 +65,7 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
     <TableContainer>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h3>
-          Workspaces <b style={{ color: "grey" }}>({rows.length})</b>
+          Workspaces <b style={{ color: "grey" }}>({workspaces.length})</b>
         </h3>
         <div>
           <CustomButton />
@@ -55,7 +77,7 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
       <input />
       <div style={{ height: 400, width: "100%" }}>
         <DataGrid
-          rows={rows}
+          rows={workspaces}
           columns={columns}
           initialState={{
             pagination: {
