@@ -65,6 +65,7 @@ export const WorkspacesTable = ({ children }: { children: any }) => {
   }, []);
 
   const TableContainer = styled("div")(({ theme }) => ({
+    marginInline: "1rem",
     backgroundColor: "#FAFAFA",
     display: "flex",
     flexFlow: "column",

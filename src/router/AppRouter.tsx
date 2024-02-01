@@ -6,6 +6,7 @@ import { Sidebar } from "../workspaces/components/Sidebar";
 import { WorkspacesPage } from "../workspaces";
 import { AccountPage } from "../workspaces/pages/AccountPage";
 import { WorkspacePage } from "../workspaces/pages/WorkspacePage";
+import { UserVolumePage } from "../workspaces/pages/UserVolumePage";
 
 export const AppRouter = () => {
   const status = useCheckAuth();
@@ -26,7 +27,14 @@ export const AppRouter = () => {
           <Routes>
             <Route path="/" element={<WorkspacesPage />} />
             <Route path="/account" element={<AccountPage />} />
-            <Route path="/workspaces/:id" element={<WorkspacePage />} />
+            <Route
+              path="/workspaces/:workspaceId"
+              element={<WorkspacePage />}
+            />
+            <Route
+              path="/workspaces/:workspaceId/modify-user-volume"
+              element={<UserVolumePage />}
+            />
             /* <Route path="/*" element={<Navigate to="/" />} /> */
           </Routes>
         </Sidebar>

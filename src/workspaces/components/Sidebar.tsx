@@ -59,7 +59,7 @@ export const Sidebar = ({ children }: { children: any }) => {
     marginLeft: marginLeft - 8,
     marginTop: -8,
     marginRight: -8,
-    height: "100vh",
+    height: "100%",
     backgroundColor: "#f2f3f3",
     paddingTop: "1.6rem",
     paddingBottom: "1.6rem",

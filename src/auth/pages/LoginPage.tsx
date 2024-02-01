@@ -38,7 +38,7 @@ export const LoginPage = () => {
 
   return (
     <>
-      <Container maxWidth="md">
+      <Container maxWidth="md" style={{ height: "100vh" }}>
         <Grid container spacing={8}>
           <Grid item xs={12} sm={5}>
             <form onSubmit={formik.handleSubmit}>
