@@ -1,6 +1,6 @@
 import { Input, styled } from "@mui/material";
 import { CustomButton } from "./CustomButton";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -41,7 +41,7 @@ const columns: GridColDef[] = [
   { field: "organization_name", headerName: "Organization Name", width: 150 },
 ];
 
-export const WorkspacesTable = ({ children }: { children: any }) => {
+export const WorkspacesTable = () => {
   const [workspaces, setWorkspaces] = useState([]);
 
   useEffect(() => {

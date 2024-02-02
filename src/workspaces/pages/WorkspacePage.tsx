@@ -3,48 +3,81 @@ import { CustomButton } from "../components/CustomButton";
 import { MainCard } from "../components/MainCard";
 import { useParams } from "react-router-dom";
 import { UserInfoItem } from "../components/UserInfoItem";
+import { useEffect, useState } from "react";
+import { getWorkspace } from "../../services/workspaceService";
 
 export const WorkspacePage = () => {
   const { workspaceId } = useParams();
+  const [summaryData, setSummaryData] = useState<
+    { title: string; value: string }[]
+  >([]);
+  const [userData, setUserData] = useState<{ title: string; value: string }[]>(
+    [],
+  );
+  const [hardwareData, setHardwareData] = useState<
+    { title: string; value: string }[]
+  >([]);
+  const [statusData, setStatusData] = useState<
+    { title: string; value: string }[]
+  >([]);
 
-  const summaryData = [
-    { title: "Username", value: "ITAdmin" },
-    { title: "Operating System", value: "Boilerplate" },
-    { title: "Launch Bundle", value: "Boilerplate" },
-    { title: "Name", value: "Boilerplate" },
-    { title: "Connection State", value: "Boilerplate" },
-    { title: "Protocol", value: "Boilerplate" },
-    { title: "Email", value: "Boilerplate" },
-    { title: "User Last Active", value: "Boilerplate" },
-    { title: "Language", value: "Boilerplate" },
-    { title: "Clients Link", value: "Boilerplate" },
-    { title: "Last State Check", value: "Boilerplate" },
-    { title: "Computer Name", value: "Boilerplate" },
-    { title: "Registration Code", value: "Boilerplate" },
-    { title: "Workspace IP", value: "Boilerplate" },
-    { title: "Encrypted Volumes", value: "Boilerplate" },
-    { title: "Encryption Key", value: "Boilerplate" },
-    { title: "AutoStop Time", value: "Boilerplate" },
-    { title: "Status", value: "Boilerplate" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await getWorkspace(workspaceId!);
+        const { workspaces } = data;
+        const workspace = workspaces[0];
+        const formatSummaryData = [
+          { title: "Username", value: workspace.username },
+          { title: "Operating System", value: workspace.operating_system },
+          { title: "Launch Bundle", value: "Boilerplate" },
+          { title: "Name", value: workspace.username },
+          { title: "Connection State", value: "Boilerplate" },
+          { title: "Protocol", value: workspace.protocol },
+          { title: "Email", value: "Boilerplate" },
+          { title: "User Last Active", value: "Boilerplate" },
+          { title: "Language", value: "Boilerplate" },
+          { title: "Clients Link", value: "Boilerplate" },
+          { title: "Last State Check", value: "Boilerplate" },
+          { title: "Computer Name", value: workspace.computer_name },
+          { title: "Registration Code", value: "Boilerplate" },
+          { title: "Workspace IP", value: workspace.ip_address },
+          {
+            title: "Encrypted Volumes",
+            value: workspace.user_volume_encryption ? "User volume" : "None",
+          },
+          { title: "Encryption Key", value: "Boilerplate" },
+          { title: "AutoStop Time", value: "Boilerplate" },
+          { title: "Status", value: workspace.status },
+        ];
 
-  const userData = [
-    { title: "Username", value: "ITAdmin" },
-    { title: "First name", value: "ITAdmin" },
-    { title: "Last name", value: "-" },
-    { title: "Email", value: "-" },
-  ];
+        const formatUserData = [
+          { title: "Username", value: workspace.username },
+          { title: "First name", value: "Boilerplate" },
+          { title: "Last name", value: "Boilerplate" },
+          { title: "Email", value: "Boilerplate" },
+        ];
+        const formatHardwareData = [
+          { title: "Root volume", value: workspace.root_volume + " GB" },
+          { title: "User volume", value: workspace.user_volume + " GB" },
+          { title: "Compute", value: "Boilerpalte" },
+        ];
+        const formatStatusData = [
+          { title: "Status", value: workspace.status },
+          { title: "Running mode", value: workspace.running_mode },
+        ];
 
-  const hardwareData = [
-    { title: "Root volume", value: "Boilerpalte" },
-    { title: "User volume", value: "Boilerpalte" },
-    { title: "Compute", value: "Boilerpalte" },
-  ];
+        setSummaryData(formatSummaryData);
+        setUserData(formatUserData);
+        setHardwareData(formatHardwareData);
+        setStatusData(formatStatusData);
+      } catch (error) {
+        console.error("Error fetching workspaces:", error);
+      }
+    };
 
-  const statusData = [
-    { title: "Status", value: "boilerpalte" },
-    { title: "Running mode", value: "Boilerpalte" },
-  ];
+    fetchData();
+  }, []);
 
   return (
     <>
