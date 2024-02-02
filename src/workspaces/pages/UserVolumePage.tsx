@@ -4,15 +4,20 @@ import {
   Input,
   Radio,
   RadioGroup,
+  Snackbar,
 } from "@mui/material";
 import { MainCard } from "../components/MainCard";
 import { UserInfoItem } from "../components/UserInfoItem";
 import { useEffect, useState } from "react";
 import { CustomButton } from "../components/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
-import { getWorkspace } from "../../services/workspaceService";
+import {
+  getWorkspace,
+  modifyUserVolume,
+} from "../../services/workspaceService";
 
 export const UserVolumePage = () => {
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const [size, setSize] = useState("opt10Gb");
   const [summaryData, setSummaryData] = useState<
     { title: string; value: string }[]
@@ -26,6 +31,43 @@ export const UserVolumePage = () => {
 
   const onClickCancel = () => {
     navigate("/workspaces/" + workspaceId);
+  };
+
+  const onClickSave = async () => {
+    try {
+      if (workspaceId) {
+        let volumeSize = 0;
+        if (size === "opt10Gb") {
+          volumeSize = 10;
+        } else if (size === "opt50Gb") {
+          volumeSize = 50;
+        } else if (size === "opt100Gb") {
+          volumeSize = 100;
+        } else {
+          const customSizeInput = document.getElementById(
+            "customSizeInput",
+          ) as HTMLInputElement;
+          volumeSize = parseInt(customSizeInput.value);
+        }
+
+        const { data } = await getWorkspace(workspaceId!);
+        const { workspaces } = data;
+        const workspace = workspaces[0];
+
+        if (volumeSize <= workspace.user_volume) {
+          setShowErrorSnackbar(true);
+          return;
+        }
+
+        modifyUserVolume(workspaceId, volumeSize);
+      }
+
+      // Redirect or perform additional actions as needed
+      navigate("/workspaces/" + workspaceId);
+    } catch (error) {
+      console.error("Error modifying user volume:", error);
+      // Handle error scenarios (e.g., show an error message to the user)
+    }
   };
 
   useEffect(() => {
@@ -131,6 +173,7 @@ export const UserVolumePage = () => {
                 }}
               >
                 <Input
+                  id="customSizeInput"
                   defaultValue={10}
                   sx={{ border: "1px solid #ced4da" }}
                   fullWidth
@@ -154,7 +197,19 @@ export const UserVolumePage = () => {
         }}
       >
         <CustomButton onClick={() => onClickCancel()}>Cancel</CustomButton>
-        <CustomButton isSecondary>Save</CustomButton>
+        <CustomButton isSecondary onClick={() => onClickSave()}>
+          Save
+        </CustomButton>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={showErrorSnackbar}
+          autoHideDuration={6000}
+          onClose={() => setShowErrorSnackbar(false)}
+          message="Volume size should be greater than the current user volume."
+        />
       </div>
     </>
   );
