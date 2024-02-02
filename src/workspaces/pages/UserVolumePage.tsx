@@ -7,12 +7,16 @@ import {
 } from "@mui/material";
 import { MainCard } from "../components/MainCard";
 import { UserInfoItem } from "../components/UserInfoItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomButton } from "../components/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
+import { getWorkspace } from "../../services/workspaceService";
 
 export const UserVolumePage = () => {
   const [size, setSize] = useState("opt10Gb");
+  const [summaryData, setSummaryData] = useState<
+    { title: string; value: string }[]
+  >([]);
   const { workspaceId } = useParams();
   const navigate = useNavigate();
 
@@ -24,13 +28,29 @@ export const UserVolumePage = () => {
     navigate("/workspaces/" + workspaceId);
   };
 
-  const summaryData = [
-    { title: "Workspace ID", value: "Boilerplate" },
-    { title: "Root volume", value: "Boilerplate" },
-    { title: "Username", value: "ITAdmin" },
-    { title: "User volume", value: "Boilerplate" },
-    { title: "Current computer", value: "Boilerplate" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await getWorkspace(workspaceId!);
+        const { workspaces } = data;
+        const workspace = workspaces[0];
+
+        const formatSummaryData = [
+          { title: "Workspace ID", value: workspaceId },
+          { title: "Root volume", value: workspace.root_volume + " GB" },
+          { title: "Username", value: workspace.username },
+          { title: "User volume", value: workspace.user_volume + " GB" },
+          { title: "Current Compute", value: workspace.compute_type_name },
+        ];
+
+        setSummaryData(formatSummaryData);
+      } catch (error) {
+        console.error("Error fetching workspaces:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const options = [
     { value: "opt10Gb", label: "User volume size: 10 GB" },

@@ -30,37 +30,49 @@ export const WorkspacePage = () => {
         const formatSummaryData = [
           { title: "Username", value: workspace.username },
           { title: "Operating System", value: workspace.operating_system },
-          { title: "Launch Bundle", value: "Boilerplate" },
+          { title: "Launch Bundle", value: workspace.bundle_name },
           { title: "Name", value: workspace.username },
-          { title: "Connection State", value: "Boilerplate" },
+          { title: "Connection State", value: workspace.connection_state },
           { title: "Protocol", value: workspace.protocol },
-          { title: "Email", value: "Boilerplate" },
-          { title: "User Last Active", value: "Boilerplate" },
-          { title: "Language", value: "Boilerplate" },
-          { title: "Clients Link", value: "Boilerplate" },
-          { title: "Last State Check", value: "Boilerplate" },
+          { title: "Email", value: "-" },
+          {
+            title: "User Last Active",
+            value: workspace.connection_state_check_timestamp,
+          },
+          { title: "Language", value: "English (US)" },
+          {
+            title: "Clients Link",
+            value: "https://clients.amazonworkspaces.com/",
+          },
+          {
+            title: "Last State Check",
+            value: workspace.last_known_user_connection_timestamp,
+          },
           { title: "Computer Name", value: workspace.computer_name },
-          { title: "Registration Code", value: "Boilerplate" },
+          { title: "Registration Code", value: workspace.registration_code },
           { title: "Workspace IP", value: workspace.ip_address },
           {
             title: "Encrypted Volumes",
             value: workspace.user_volume_encryption ? "User volume" : "None",
           },
-          { title: "Encryption Key", value: "Boilerplate" },
-          { title: "AutoStop Time", value: "Boilerplate" },
+          { title: "Encryption Key", value: workspace.volume_encryption_key },
+          {
+            title: "AutoStop Time",
+            value: workspace.running_mode_auto_stop_timeout_in_minutes + " min",
+          },
           { title: "Status", value: workspace.status },
         ];
 
         const formatUserData = [
           { title: "Username", value: workspace.username },
-          { title: "First name", value: "Boilerplate" },
-          { title: "Last name", value: "Boilerplate" },
-          { title: "Email", value: "Boilerplate" },
+          { title: "First name", value: workspace.username },
+          { title: "Last name", value: "-" },
+          { title: "Email", value: "-" },
         ];
         const formatHardwareData = [
           { title: "Root volume", value: workspace.root_volume + " GB" },
           { title: "User volume", value: workspace.user_volume + " GB" },
-          { title: "Compute", value: "Boilerpalte" },
+          { title: "Compute", value: workspace.compute_type_name },
         ];
         const formatStatusData = [
           { title: "Status", value: workspace.status },
