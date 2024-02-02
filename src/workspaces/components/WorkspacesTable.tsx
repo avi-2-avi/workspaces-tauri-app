@@ -7,64 +7,97 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { getWorkspaces } from "../../services/workspaceService";
 import { Link } from "react-router-dom";
 
-const columns: GridColDef[] = [
-  {
-    field: "user_volume_encryption",
-    headerName: "Volume encryption",
-    width: 130,
-    valueGetter: (params) => (params.value ? "Yes" : "No"),
-  },
-  {
-    field: "workspace_id",
-    headerName: "Workspace ID",
-    width: 130,
-    renderCell: (params) => (
-      <Link to={`/workspaces/${params.value}`}>{params.value}</Link>
-    ),
-  },
-  { field: "username", headerName: "Username", width: 100 },
-  { field: "compute", headerName: "Compute", width: 100 },
-  { field: "root_volume", headerName: "Root volume", width: 100 },
-  { field: "user_volume", headerName: "User volume", width: 100 },
-  { field: "operating_system", headerName: "Operating System", width: 200 },
-  { field: "bundle_name", headerName: "Bundle", width: 340 },
-  { field: "ip_address", headerName: "Workspace IP", width: 130 },
-  {
-    field: "standby_enabled",
-    headerName: "Standby enabled",
-    width: 130,
-    valueGetter: (params) => (params.value ? "Yes" : "No"),
-  },
-  { field: "running_mode", headerName: "Running Mode", width: 130 },
-  { field: "protocol", headerName: "Protocol", width: 100 },
-  { field: "status", headerName: "Status", width: 100 },
-  { field: "organization_name", headerName: "Organization Name", width: 150 },
-];
+interface Workspace {
+  bundle_name: string;
+  compute_type_name: string;
+  computer_name: string;
+  ip_address: string;
+  operating_system: string;
+  organization_name: string;
+  protocol: string;
+  root_volume: number;
+  running_mode: string;
+  standby_enabled: boolean;
+  status: string;
+  user_volume: number;
+  user_volume_encryption: boolean;
+  username: string;
+  workspace_id: string;
+}
 
 export const WorkspacesTable = () => {
-  const [workspaces, setWorkspaces] = useState([]);
+  const columns: GridColDef[] = [
+    {
+      field: "user_volume_encryption",
+      headerName: "Volume encryption",
+      width: 130,
+      valueGetter: (params) => (params.value ? "Enabled" : "Disabled"),
+    },
+    {
+      field: "workspace_id",
+      headerName: "Workspace ID",
+      width: 130,
+      renderCell: (params) => (
+        <Link to={`/workspaces/${params.value}`}>{params.value}</Link>
+      ),
+    },
+    { field: "username", headerName: "Username", width: 100 },
+    { field: "compute_type_name", headerName: "Compute", width: 100 },
+    { field: "root_volume", headerName: "Root volume", width: 100 },
+    { field: "user_volume", headerName: "User volume", width: 100 },
+    { field: "operating_system", headerName: "Operating System", width: 200 },
+    { field: "bundle_name", headerName: "Bundle", width: 340 },
+    { field: "ip_address", headerName: "Workspace IP", width: 130 },
+    {
+      field: "standby_enabled",
+      headerName: "Standby enabled",
+      width: 130,
+      valueGetter: (params) => (params.value ? "Yes" : "No"),
+    },
+    { field: "running_mode", headerName: "Running Mode", width: 130 },
+    { field: "protocol", headerName: "Protocol", width: 100 },
+    { field: "status", headerName: "Status", width: 130 },
+    { field: "organization_name", headerName: "Organization Name", width: 150 },
+  ];
+
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [selectedRows, setSelectedRows] = useState<Workspace[]>([]);
+  const fetchData = async () => {
+    try {
+      // This works, just don't wanna call too many times API GATEWAY
+      const response = await getWorkspaces();
+      const workspacesWithIds = response.data.workspaces.map(
+        (workspace: any, index: number) => ({
+          ...workspace,
+          id: index + 1, // You can use any unique identifier here
+        }),
+      );
+      setWorkspaces(workspacesWithIds);
+    } catch (error) {
+      console.error("Error fetching workspaces:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // This works, just don't wanna call too many times API GATEWAY
-        const response = await getWorkspaces();
-        const workspacesWithIds = response.data.workspaces.map(
-          (workspace: any, index: number) => ({
-            ...workspace,
-            id: index + 1, // You can use any unique identifier here
-          }),
-        );
-        setWorkspaces(workspacesWithIds);
-      } catch (error) {
-        console.error("Error fetching workspaces:", error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  const TableContainer = styled("div")(({ theme }) => ({
+  const onClickRefresh = () => {
+    fetchData();
+  };
+
+  const onClickReboot = () => {};
+
+  const onSelectionModelChange = (selectionModel: any) => {
+    const indexes = new Set(selectionModel);
+    const selectedRows = workspaces.filter((_, index) =>
+      indexes.has(index + 1),
+    );
+    // console.log(selectedRows);
+    // setSelectedRows(selectedRows);
+  };
+
+  const TableContainer = styled("div")(() => ({
     marginInline: "1rem",
     backgroundColor: "#FAFAFA",
     display: "flex",
@@ -87,14 +120,17 @@ export const WorkspacesTable = () => {
           Workspaces <b style={{ color: "grey" }}>({workspaces.length})</b>
         </h3>
         <div>
-          <CustomButton>
+          <CustomButton onClick={onClickRefresh}>
             <RefreshIcon fontSize="small" />
           </CustomButton>
-          <CustomButton>View Details</CustomButton>
-          <CustomButton>Start</CustomButton>
-          <CustomButton>Stop</CustomButton>
-          <CustomButton>Delete</CustomButton>
-          <CustomButton>Actions</CustomButton>
+          <CustomButton isDisabled>View Details</CustomButton>
+          <CustomButton isDisabled>Start</CustomButton>
+          <CustomButton isDisabled>Stop</CustomButton>
+          <CustomButton onClick={onClickReboot} isDisabled>
+            Reboot
+          </CustomButton>
+          <CustomButton isDisabled>Delete</CustomButton>
+          <CustomButton isDisabled>Actions</CustomButton>
           <CustomButton isSecondary>Create Workspaces</CustomButton>
         </div>
       </div>

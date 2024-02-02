@@ -1,12 +1,14 @@
-import { Grid } from "@mui/material";
+import { Button, Grid, IconButton, Snackbar } from "@mui/material";
 import { CustomButton } from "../components/CustomButton";
+import CloseIcon from "@mui/icons-material/Close";
 import { MainCard } from "../components/MainCard";
 import { useParams } from "react-router-dom";
 import { UserInfoItem } from "../components/UserInfoItem";
-import { useEffect, useState } from "react";
-import { getWorkspace } from "../../services/workspaceService";
+import { Fragment, useEffect, useState } from "react";
+import { getWorkspace, rebootWorkspace } from "../../services/workspaceService";
 
 export const WorkspacePage = () => {
+  const [open, setOpen] = useState(false);
   const { workspaceId } = useParams();
   const [summaryData, setSummaryData] = useState<
     { title: string; value: string }[]
@@ -20,6 +22,17 @@ export const WorkspacePage = () => {
   const [statusData, setStatusData] = useState<
     { title: string; value: string }[]
   >([]);
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +104,30 @@ export const WorkspacePage = () => {
     fetchData();
   }, []);
 
+  const onClickReboot = async () => {
+    try {
+      // Assuming workspaceId is defined in your component state or props
+      if (workspaceId) {
+        rebootWorkspace(workspaceId);
+        setOpen(true);
+      }
+    } catch (error) {
+      console.error("Error rebooting workspace:", error);
+    }
+  };
+  const action = (
+    <Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
+
   return (
     <>
       <div
@@ -104,12 +141,28 @@ export const WorkspacePage = () => {
       >
         <h2 style={{ margin: 0 }}>{workspaceId}</h2>
         <div>
-          <CustomButton>Create image</CustomButton>
-          <CustomButton>Start</CustomButton>
-          <CustomButton>Stop</CustomButton>
-          <CustomButton>Reboot</CustomButton>
-          <CustomButton>Delete</CustomButton>
-          <CustomButton>Actions</CustomButton>
+          <CustomButton isDisabled>Create image</CustomButton>
+          <CustomButton isDisabled>Start</CustomButton>
+          <CustomButton isDisabled>Stop</CustomButton>
+          <CustomButton
+            onClick={onClickReboot}
+            isDisabled={statusData[0]?.value === "STOPPED"}
+          >
+            Reboot
+          </CustomButton>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message="Workspace rebooted successfully, please wait 5 minutes."
+            action={action}
+          />
+          <CustomButton isDisabled>Delete</CustomButton>
+          <CustomButton isDisabled>Actions</CustomButton>
         </div>
       </div>
       <MainCard title="Summary">

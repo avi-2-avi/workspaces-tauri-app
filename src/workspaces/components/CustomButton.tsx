@@ -3,12 +3,14 @@ import { Button, styled } from "@mui/material";
 interface CustomButtonProps {
   children: React.ReactNode;
   isSecondary?: boolean;
+  isDisabled?: boolean;
   onClick?: () => void;
 }
 
 export const CustomButton = ({
   children,
   isSecondary,
+  isDisabled,
   onClick,
 }: CustomButtonProps) => {
   const ColorButton = styled(Button)({
@@ -28,5 +30,9 @@ export const CustomButton = ({
     paddingInline: 12,
   });
 
-  return <ColorButton onClick={onClick}>{children}</ColorButton>;
+  return (
+    <ColorButton onClick={onClick} disabled={isDisabled}>
+      {children}
+    </ColorButton>
+  );
 };
